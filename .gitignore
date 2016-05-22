@@ -4,6 +4,10 @@ pom.xml
 /.lein-deps-sum
 /.lein-failures
 /.lein-env
+/.lein-repl-history
+/.nrepl-port
 /checkouts
 /.env
+/.idea
+/coffeecounterbot.iml
 /target

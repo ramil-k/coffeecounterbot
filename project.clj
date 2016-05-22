@@ -13,7 +13,8 @@
                  ;[com.cemerick/drawbridge "0.0.6"]
                  [clj-http "2.0.1"]
                  [org.clojure/data.json "0.2.6"]
-                 [telegram "0.2.8"]]
+                 [telegram "0.2.8"]
+                 [org.clojure/core.async "0.2.374"]]
   :min-lein-version "2.0.0"
   :plugins [[environ/environ.lein "0.2.1"]]
   :hooks [environ.leiningen.hooks]

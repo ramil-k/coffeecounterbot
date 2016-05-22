@@ -15,8 +15,6 @@
     (telegram.client/send-message token chat-id ["SPACE"])))
 
 (defroutes app
-           (ANY "/repl" {:as req}
-                (drawbridge req))
            (GET "/" []
                 {:status  200
                  :headers {"Content-Type" "text/plain"}
@@ -28,13 +26,13 @@
 
 (defn -main [& [port]]
   (go (let [port (Integer. (or port (env :port) 5000))]
-        (jetty/run-jetty (wrap-app #'app) {:port port :join? false})) )
-  (go (let [token (env :token)]
-        (while true
-          (let [updates ((telegram.client/get-updates token) :result)]
-            (dorun
-              (map #(process-upd %)
-                   updates)))
-          (Thread/sleep 3000)))))
+        (jetty/run-jetty #'app {:port port :join? false})) )
+  (let [token (env :token)]
+    (while true
+      (let [updates ((telegram.client/get-updates token) :result)]
+        (dorun
+          (map #(process-upd %)
+               updates)))
+      (Thread/sleep 3000))))
 
 

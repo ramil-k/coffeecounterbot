@@ -1,7 +1,7 @@
 (defproject coffeecounterbot "1.0.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://coffeecounterbot.herokuapp.com"
-  :main coffeecounterbot.web
+  ;:main coffeecounterbot.web
   :license {:name "FIXME: choose"
             :url "http://example.com/FIXME"}
   :dependencies [[org.clojure/clojure "1.8.0"]

@@ -3,6 +3,7 @@
             [compojure.core :refer [defroutes GET PUT POST DELETE ANY]]
             [ring.adapter.jetty :as jetty]
             [clojure.data.json :as json]
+            [clj-http.client :as client]
             [clojure.core.async
              :as a
              :refer [>! <! >!! <!! go chan buffer close! thread
@@ -25,9 +26,12 @@
            (ANY "*" []
                 {:status  404
                  :headers {"Content-Type" "text/plain"}
-                 :body    "gtfo"}))
+                 :body    "404"}))
 
 (defn -main [& [port]]
+  (client/post (str "https://api.telegram.org/bot" token "/" "setWebhook")
+               {:form-params data
+                :as :json})
   (let [port (Integer. (or port (env :port) 5000))]
         (jetty/run-jetty #'app {:port port :join? false}))
 

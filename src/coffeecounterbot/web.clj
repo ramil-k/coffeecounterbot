@@ -30,7 +30,7 @@
 
 (defn -main [& [port]]
   (client/post (str "https://api.telegram.org/bot" token "/" "setWebhook")
-               {:form-params data
+               {:form-params {:url (str "https://coffeecounterbot.heroku.com/" "webhook"};TODO get from heroku env somehow
                 :as :json})
   (let [port (Integer. (or port (env :port) 5000))]
         (jetty/run-jetty #'app {:port port :join? false}))

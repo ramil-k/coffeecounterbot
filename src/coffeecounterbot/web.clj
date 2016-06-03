@@ -2,37 +2,32 @@
   (:require [telegram.client]
             [compojure.core :refer [defroutes GET PUT POST DELETE ANY]]
             [ring.adapter.jetty :as jetty]
+            [clojure.data.json :as json]
             [clojure.core.async
              :as a
              :refer [>! <! >!! <!! go chan buffer close! thread
                      alts! alts!! timeout]]
             [environ.core :refer [env]]))
 
-(defn process-upd [upd]
+(defn webhook [upd]
   (let [token (env :token)
         chat-id (-> upd :message :chat :id)]
-    (telegram.client/get-updates token (inc (upd :update_id)))
-    (telegram.client/send-message token chat-id ["SPACE"])))
-
+    (telegram.client/send-message token chat-id ["SPACE"])
+    {:status 200}))
+  
 (defroutes app
            (GET "/" []
                 {:status  200
                  :headers {"Content-Type" "text/plain"}
-                 :body    (pr-str ["Hello" :from 'Heroku])})
+                 :body    "YO!"})
+           (POST "/webhook" {body :body}
+                 (webhook (json/read-str body)))
            (ANY "*" []
                 {:status  404
                  :headers {"Content-Type" "text/plain"}
-                 :body    (pr-str ["Not found " :from 'Heroku])}))
+                 :body    "gtfo"}))
 
 (defn -main [& [port]]
-  (go (let [port (Integer. (or port (env :port) 5000))]
-        (jetty/run-jetty #'app {:port port :join? false})) )
-  (let [token (env :token)]
-    (while true
-      (let [updates ((telegram.client/get-updates token) :result)]
-        (dorun
-          (map #(process-upd %)
-               updates)))
-      (Thread/sleep 3000))))
-
+  (let [port (Integer. (or port (env :port) 5000))]
+        (jetty/run-jetty #'app {:port port :join? false}))
 
